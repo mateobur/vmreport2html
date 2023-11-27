@@ -154,10 +154,11 @@ def json_to_html_with_tabs(json_file, output_file):
 
     # Packages tab
     html_content += "<div id='Packages' class='tabcontent'><h3>Packages</h3>"
-    html_content += "<h4>Package Details</h4><table><tr><th>Package Name</th><th>Version</th><th>Severity Summary</th><th>Vulnerabilities</th></tr>"
+    html_content += "<h4>Package Details</h4><table><tr><th>Package Name</th><th>Version</th><th>Suggested Fix</th><th>Severity Summary</th><th>Vulnerabilities</th></tr>"
     for package in data["packages"]["list"]:
         package_name = package["name"]
         package_version = package["version"]
+        suggested_fix = package.get("suggestedFix", "N/A")  # Include the suggested fix, with "N/A" as a default
         severity_summary = ", ".join(
             [
                 f"{severity['severity']['label']}: {severity['total']}"
@@ -173,9 +174,10 @@ def json_to_html_with_tabs(json_file, output_file):
             vuln_score = vuln["cvssScore"]["value"]["score"]
             vuln_details += f"<li class='{vuln_severity_class}'><strong>{vuln_name}</strong> - {vuln_severity} (Score: {vuln_score})</li>"
         vuln_details += "</ul>"
-        html_content += f"<tr><td>{package_name}</td><td>{package_version}</td><td>{severity_summary}</td><td>{vuln_details}</td></tr>"
+        html_content += f"<tr><td>{package_name}</td><td>{package_version}</td><td>{suggested_fix}</td><td>{severity_summary}</td><td>{vuln_details}</td></tr>"
     html_content += "</table>"
     html_content += "</div>"
+
 
     # Closing HTML tags
     html_content += """
